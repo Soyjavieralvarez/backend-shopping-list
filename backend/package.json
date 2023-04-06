@@ -2,9 +2,11 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "MERN Node",
+  "type":"module",
   "main": "index.js",
   "scripts": {
-    "dev": "node index.js"
+    "dev": "nodemon index.js",
+    "start": "node index.js"
   },
   "keywords": [
     "MERN",
@@ -17,5 +19,8 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
   }
 }
