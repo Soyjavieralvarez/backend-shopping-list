@@ -74,8 +74,62 @@ const confirm = async (req, res) => {
  }
 }
 
+const fogotPassword = async (req, res) => {
+    const { email } = req.body;
+
+    const user = await User.findOne({email})
+    if(!user){
+        const error = new Error("El usuario no existe")
+        return res.status(404).json({msg: error.message});
+    }
+
+    try {
+        user.token = generateID(),
+        await user.save();
+        res.json({ msg: "Revisa tu carpeta de correo, a veces llega a no deseado o SPAM, te he enviado un correo con las intrucciones para recuperar tu cuenta" })
+    } catch (error) {
+        console.log(error)
+    };
+};
+
+const checkOutToken = async (req, res) => {
+    const { token } = req.params;
+
+    const validToken = await User.findOne({ token })
+    if(validToken){
+        res.json({msg: 'El Token es valido y el usuario existe'})
+    } else {
+       const error = new Error('El Token no es valido');
+       return res.status(404).json( {msg: error.message} )
+    };
+};
+
+const newPassword = async (req, res) => {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    const user = await User.findOne({ token });
+
+    if(user){
+        user.password = password;
+        user.token = '';
+        try {
+            await user.save();
+            res.json({ msg:"La contraseña ha sido modificada correctamente"});
+        } catch (error) {
+            console.log(error)
+        }
+    } else {
+       const error = new Error('El Token no es valido');
+       return res.status(404).json({ msg: error.message });
+    };
+}
+
 export {
     register,
     authenticate,
     confirm,
+    fogotPassword,
+    checkOutToken,
+    newPassword,
 }
