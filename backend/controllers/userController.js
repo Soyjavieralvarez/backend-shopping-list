@@ -1,5 +1,6 @@
 import User from "../models/Users.js";
 import generateID from "../helpers/generateID.js";
+import generateJWT from "../helpers/generateJWT.js";
 
 
 const register = async (req, res) => {
@@ -31,13 +32,27 @@ const authenticate = async(req, res) => {
         const error = new Error("El usuario no existe")
         return res.status(404).json({msg: error.message});
     }
+
     // check if user is confirmed
-    
     if(!user.confirmed){
         const error = new Error("Tu cuenta no ha sido confirmada")
         return res.status(403).json({msg: error.message});
     }
+
     // check the password
+    if(await user.checkPassword(password)){
+        res.json({
+           _id: user._id,
+           name: user.name,
+           email: user.email,
+           token: generateJWT(user._id),
+        })
+    } else {
+        if(!user.confirmed){
+        const error = new Error("La contraseña no es correcta")
+        return res.status(403).json({msg: error.message});
+    }
+    }
 
     
 };
