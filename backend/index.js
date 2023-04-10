@@ -12,7 +12,7 @@ connectDB();
 
 // Routing 
 
-app.use("/api/usuarios", userRoutes);
+app.use("/api/users", userRoutes);
 
 
 
