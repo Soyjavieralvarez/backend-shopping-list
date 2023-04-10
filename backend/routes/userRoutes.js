@@ -1,11 +1,13 @@
 import express from "express";
 const router = express.Router();
 
-import { register } from "../controllers/userController.js";
+import { register, authenticate } from "../controllers/userController.js";
 
-//Autenticación, registro y confirmación de usuarios
+//Authentication, registration and confirmation of users
 
-router.post('/', register) //Creación de un nuevo usuario
+router.post('/', register) //Route: Create a new user
+router.post('/login', authenticate) //Route: Authenticate users
+
 
 
 
